@@ -1,0 +1,10 @@
+GET https://google.com
+
+POST https://localhost:8080/create-url
+Content-Type: application/json
+{
+    "name": "Mac book",
+    "name": 12
+}
+
+GET https://youtube.com
