@@ -9,3 +9,7 @@ start:
 
 dev:
 	nodemon --exec go run main.go
+
+deploy: echo "TODO"
+
+test: echo "TODO"

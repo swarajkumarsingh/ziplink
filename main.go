@@ -1,14 +1,12 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"time"
+  "log"
+  "net/http"
+  "time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/swarajkumarsingh/ziplink/controller"
-	"github.com/swarajkumarsingh/ziplink/db"
-	"github.com/swarajkumarsingh/ziplink/router"
+  "github.com/gin-gonic/gin"
+  "github.com/swarajkumarsingh/ziplink/db"
 )
 
 var version string = "1.0"
@@ -54,14 +52,13 @@ func main() {
   r.Use(startLog())
   r.Use(EnableCORS())
 
+  db.Init()
+
   r.GET("/", func(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{
       "message": "health ok",
     })
   })
-
-  controller.NewUrlController(db.GetSession())
-  router.SetupUrlRoutes(r)
 
   log.Printf("Server Started, version: %s", version)
   r.Run("localhost:8080")
