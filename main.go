@@ -1,12 +1,13 @@
 package main
 
 import (
-  "log"
-  "net/http"
-  "time"
+	"log"
+	"net/http"
+	"time"
 
-  "github.com/gin-gonic/gin"
-  "github.com/swarajkumarsingh/ziplink/db"
+	"github.com/gin-gonic/gin"
+	"github.com/swarajkumarsingh/ziplink/infra/db"
+	redis "github.com/swarajkumarsingh/ziplink/infra/redis"
 )
 
 var version string = "1.0"
@@ -53,6 +54,7 @@ func main() {
   r.Use(EnableCORS())
 
   db.Init()
+  redis.Init()
 
   r.GET("/", func(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{

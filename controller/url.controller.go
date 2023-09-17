@@ -2,13 +2,23 @@ package controller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/swarajkumarsingh/ziplink/conf"
+	"github.com/swarajkumarsingh/ziplink/functions/general"
+	redisUtils "github.com/swarajkumarsingh/ziplink/infra/redis"
 	"gopkg.in/mgo.v2"
 )
 
 type UrlController struct {
 	session *mgo.Session
+}
+
+type Response struct {
+	Url string
+	CustomShort string
+	Expiry time.Duration
 }
 
 func NewUrlController(s *mgo.Session) *UrlController {
@@ -22,10 +32,19 @@ func (uc UrlController) CreateUrl(c *gin.Context) {
 	// create mongodb client 
 
 	// get a counter from redis
+	counter, err := redisUtils.IncrementCounter()
+	if err != nil {
+		panic(err)
+	}
 
 	// convert the counter number to b64 encoder chr length 7
+	shortId := general.ConvertToBase64ID(counter)
 
-	// Set expiry
+	var response Response = Response{
+		Url: longUrl,
+		CustomShort: shortId,
+		Expiry: conf.FreedomRedisTTL,
+	}
 
 	// Save in mongodb
 
