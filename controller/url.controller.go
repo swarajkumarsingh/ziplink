@@ -22,8 +22,10 @@ func CreateUrl(c *gin.Context) {
 	}
 
 	shortId, err := GetShortId(body.LongUrl)
+	fmt.Println(shortId)
 	if err != nil {
 		SendErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	var content = model.UrlModel{
@@ -34,7 +36,8 @@ func CreateUrl(c *gin.Context) {
 
 	msg, err := db.InsertUrl(c, content)
 	if err != nil {
-		SendErrorResponse(c, http.StatusInternalServerError, msg)
+		SendErrorResponse(c, http.StatusInternalServerError, msg+err.Error())
+		return
 	}
 
 	err = CacheLongUrl(shortId, content.LongUrl)

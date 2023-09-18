@@ -5,6 +5,7 @@ import (
   "net/http"
 
   "github.com/gin-gonic/gin"
+  "github.com/joho/godotenv"
   "github.com/swarajkumarsingh/ziplink/controller"
   "github.com/swarajkumarsingh/ziplink/infra/db"
   redis "github.com/swarajkumarsingh/ziplink/infra/redis"
@@ -33,6 +34,12 @@ func main() {
   r := gin.Default()
 
   r.Use(EnableCORS())
+
+  // Load environment variables from a .env file
+  err := godotenv.Load()
+  if err != nil {
+    log.Fatal("Error loading .env file")
+  }
 
   db.Init()
   redis.Init()

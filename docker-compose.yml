@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+# MongoDB
+  mongo_db:
+    container_name: db_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+
+# Redis
+  redis:
+    build: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - data:/data
+    
+
+# Golang API service
+  golang:
+    container_name: golang_container
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+    environment:
+      STAGE: dev
+      PORT: 8080
+      REDIS_USER:
+      REDIS_PASSWORD:
+      REDIS_PORT: 6379
+      REDIS_HOST: localhost
+      MONGO_URL: mongodb://mongo_db:27017
+    depends_on:
+      - mongo_db
+      - redis
+
+volumes:
+  mongo_db: {}

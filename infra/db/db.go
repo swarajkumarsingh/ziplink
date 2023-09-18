@@ -4,7 +4,6 @@ import (
   "context"
   "errors"
   "fmt"
-  "net/http"
 
   "github.com/gin-gonic/gin"
   "github.com/swarajkumarsingh/ziplink/conf"
@@ -19,7 +18,7 @@ import (
 var collection *mongo.Collection
 
 func Init() {
-  clientOptions := options.Client().ApplyURI(conf.ConnectionString)
+  clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.qtu0upw.mongodb.net/?retryWrites=true&w=majority")
 
   client, err := mongo.Connect(context.TODO(), clientOptions)
   if err != nil {
@@ -28,15 +27,13 @@ func Init() {
 
   collection = client.Database(conf.DbName).Collection(conf.ColName)
 
-  indexOptions := options.Index().SetUnique(true)
   indexModel := mongo.IndexModel{
-    Keys:    bson.M{"shortUrl": 1},
-    Options: indexOptions,
+    Keys: bson.M{"shortUrl": 1},
   }
 
-  _, err = collection.Indexes().CreateOne(context.TODO(), indexModel)
+  _, err = collection.Indexes().CreateOne(context.Background(), indexModel)
   if err != nil {
-    fmt.Println("Unable to add indexes")
+    fmt.Println("Unable to add indexes", err)
   }
 
   fmt.Println("Connected to DB successfully")
@@ -48,14 +45,15 @@ func InsertUrl(c *gin.Context, model model.UrlModel) (string, error) {
     return "Invalid url", errors.New("invalid url")
   }
 
+  fmt.Println(model)
+
   inserted, err := collection.InsertOne(context.TODO(), model)
 
   if err != nil {
-    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
     return "error while inserting document in DB", err
   }
 
-  fmt.Println("Inserted 1 movie in DB with id: ", inserted.InsertedID)
+  fmt.Println("Inserted link in DB with id: ", inserted.InsertedID)
   return "Success", nil
 }
 
