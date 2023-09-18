@@ -33,7 +33,7 @@ func Init() {
 
 func InsertUrl(c *gin.Context, model model.UrlModel) (string, error) {
 
-  if general.IsNotValidURL(model.ShortId) {
+  if !general.IsValidURL(model.LongUrl) {
     return "Invalid url", errors.New("invalid url")
   }
 

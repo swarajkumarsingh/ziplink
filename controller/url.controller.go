@@ -16,7 +16,7 @@ import (
 
 func CreateUrl(c *gin.Context) {
 	var body Request
-	if err := c.ShouldBindJSON(&body); err != nil || body.LongUrl == "" || general.IsNotValidURL(body.LongUrl) {
+	if err := c.ShouldBindJSON(&body); err != nil || body.LongUrl == "" || !general.IsValidURL(body.LongUrl) {
 		SendErrorResponse(c, http.StatusBadRequest, "Url not found")
 		return
 	}

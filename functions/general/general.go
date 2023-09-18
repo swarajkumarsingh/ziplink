@@ -5,15 +5,9 @@ import (
 	"strings"
 )
 
-
 func IsValidURL(input string) bool {
 	_, err := url.ParseRequestURI(input)
 	return err == nil
-}
-
-func IsNotValidURL(input string) bool {
-	_, err := url.ParseRequestURI(input)
-	return err != nil
 }
 
 func ConvertToBase64ID(counterValue int64) string {

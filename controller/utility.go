@@ -2,7 +2,6 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -18,10 +17,6 @@ func SendErrorResponse(c *gin.Context, statusCode int, message string) {
 }
 
 func GetShortId(longUrl string) (string, error) {
-	if longUrl == "" || general.IsNotValidURL(longUrl) {
-		return "", errors.New("invalid long url")
-	}
-
 	counter, err := redis.IncrementCounter()
 	if err != nil {
 		return "", nil
@@ -37,11 +32,6 @@ func GetShortId(longUrl string) (string, error) {
 }
 
 func CacheLongUrl(shortId string, longUrl string) error {
-
-	if general.IsNotValidURL(longUrl) {
-		fmt.Println("invalid url, for caching")
-	}
-
 	var ttl = time.Hour * 24
 	err := redis.Set(shortId, longUrl, ttl)
 

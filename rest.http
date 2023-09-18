@@ -1,4 +1,13 @@
+### Healt Check
 GET http://localhost:8080
 
+### Redirect Url
+GET http://localhost:8080/AAAAAAB
 
-GET http://localhost:8080/
+### Create Short Url
+POST http://localhost:8080/create-url
+content-type: application/json
+
+{
+  "url": "https://instagram.com/"
+}
