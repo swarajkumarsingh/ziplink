@@ -1,19 +1,19 @@
 package db
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"net/http"
+  "context"
+  "errors"
+  "fmt"
+  "net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/swarajkumarsingh/ziplink/conf"
-	"github.com/swarajkumarsingh/ziplink/functions/general"
-	"github.com/swarajkumarsingh/ziplink/model"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"gopkg.in/mgo.v2/bson"
+  "github.com/gin-gonic/gin"
+  "github.com/swarajkumarsingh/ziplink/conf"
+  "github.com/swarajkumarsingh/ziplink/functions/general"
+  "github.com/swarajkumarsingh/ziplink/model"
+  "go.mongodb.org/mongo-driver/bson/primitive"
+  "go.mongodb.org/mongo-driver/mongo"
+  "go.mongodb.org/mongo-driver/mongo/options"
+  "gopkg.in/mgo.v2/bson"
 )
 
 var collection *mongo.Collection
@@ -22,13 +22,24 @@ func Init() {
   clientOptions := options.Client().ApplyURI(conf.ConnectionString)
 
   client, err := mongo.Connect(context.TODO(), clientOptions)
-
   if err != nil {
     panic(err)
   }
 
-  fmt.Println("Connected to DB successfully")
   collection = client.Database(conf.DbName).Collection(conf.ColName)
+
+  indexOptions := options.Index().SetUnique(true)
+  indexModel := mongo.IndexModel{
+    Keys:    bson.M{"shortUrl": 1},
+    Options: indexOptions,
+  }
+
+  _, err = collection.Indexes().CreateOne(context.TODO(), indexModel)
+  if err != nil {
+    fmt.Println("Unable to add indexes")
+  }
+
+  fmt.Println("Connected to DB successfully")
 }
 
 func InsertUrl(c *gin.Context, model model.UrlModel) (string, error) {

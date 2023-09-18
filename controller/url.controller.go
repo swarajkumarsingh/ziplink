@@ -50,13 +50,13 @@ func CreateUrl(c *gin.Context) {
 
 func RedirectUrl(c *gin.Context) {
 	shortId := c.Param("url")
-	if shortId == "" {
+	if shortId == "" || len(shortId) != 7 {
 		SendErrorResponse(c, http.StatusBadRequest, "Invalid shortUrl")
 		return
 	}
 
 	val, err := redis.Get(shortId)
-	if err != nil || val == "" {
+	if err != nil || val == "" || !general.IsValidURL(val) {
 		fmt.Println("url not found in cache")
 
 		// fetch from DB
@@ -66,6 +66,11 @@ func RedirectUrl(c *gin.Context) {
 				SendErrorResponse(c, http.StatusNotFound, "Specific Url not found")
 				return
 			}
+			SendErrorResponse(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+
+		if !general.IsValidURL(urlModel.LongUrl) {
 			SendErrorResponse(c, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
