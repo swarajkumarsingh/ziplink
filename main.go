@@ -1,37 +1,19 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"time"
+  "log"
+  "net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/swarajkumarsingh/ziplink/infra/db"
-	redis "github.com/swarajkumarsingh/ziplink/infra/redis"
+  "github.com/gin-gonic/gin"
+  "github.com/swarajkumarsingh/ziplink/controller"
+  "github.com/swarajkumarsingh/ziplink/infra/db"
+  redis "github.com/swarajkumarsingh/ziplink/infra/redis"
 )
 
 var version string = "1.0"
 
-func startLog() gin.HandlerFunc {
-  return func(c *gin.Context) {
-    u := ""
-    reqLog := map[string]string{
-      "requestID": u,
-      "startTime": time.Now().Format("2006-01-02 15:04:05.000000000"),
-      "endTime":   "",
-    }
-    c.Set("reqLog", reqLog)
-    c.Next()
-  }
-}
-
 func EnableCORS() gin.HandlerFunc {
   return func(c *gin.Context) {
-    // corsEnabledStr := vault.GetOrDefaultString(c, vault.KeyCORSEnabled, "false")
-    // corsAllowedDomains := strings.ToLower(vault.GetOrDefaultString(c, vault.KeyCORSOriginDomains, ""))
-
-    // if origin := strings.ToLower(c.GetHeader("Origin")); corsEnabledStr == "true" && origin != "" && (strings.Contains(corsAllowedDomains, "*") || strings.Contains(corsAllowedDomains, origin)) {
-
     c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
     c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
     c.Writer.Header().Set("Access-Control-Allow-Headers",
@@ -50,7 +32,6 @@ func EnableCORS() gin.HandlerFunc {
 func main() {
   r := gin.Default()
 
-  r.Use(startLog())
   r.Use(EnableCORS())
 
   db.Init()
@@ -61,6 +42,15 @@ func main() {
       "message": "health ok",
     })
   })
+
+  r.POST("/", func(c *gin.Context) {
+    c.JSON(http.StatusOK, gin.H{
+      "message": "health ok",
+    })
+  })
+
+  r.GET("/:url", controller.RedirectUrl)
+  r.POST("/create-url", controller.CreateUrl)
 
   log.Printf("Server Started, version: %s", version)
   r.Run("localhost:8080")

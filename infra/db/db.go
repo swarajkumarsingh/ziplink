@@ -2,11 +2,13 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/swarajkumarsingh/ziplink/conf"
+	"github.com/swarajkumarsingh/ziplink/functions/general"
 	"github.com/swarajkumarsingh/ziplink/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,6 +17,7 @@ import (
 )
 
 var collection *mongo.Collection
+
 func Init() {
   clientOptions := options.Client().ApplyURI(conf.ConnectionString)
 
@@ -28,20 +31,21 @@ func Init() {
   collection = client.Database(conf.DbName).Collection(conf.ColName)
 }
 
-func InsertUrl(c *gin.Context, model model.UrlModel) {
-  if err := c.BindJSON(&model); err != nil {
-    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-    return
+func InsertUrl(c *gin.Context, model model.UrlModel) (string, error) {
+
+  if general.IsNotValidURL(model.ShortId) {
+    return "Invalid url", errors.New("invalid url")
   }
 
-  inserted, err := collection.InsertOne(context.Background(), model)
+  inserted, err := collection.InsertOne(context.TODO(), model)
 
   if err != nil {
     c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-    return
+    return "error while inserting document in DB", err
   }
 
   fmt.Println("Inserted 1 movie in DB with id: ", inserted.InsertedID)
+  return "Success", nil
 }
 
 func UpdateUrl(urlId string) {
@@ -63,7 +67,6 @@ func UpdateUrl(urlId string) {
 }
 
 func DeleteUrl(urlId string) {
-  // convert string to _id
   id, err := primitive.ObjectIDFromHex(urlId)
   if err != nil {
     panic(err)
@@ -90,24 +93,17 @@ func DeleteAllUrl() {
   fmt.Println("deleted count: ", result.DeletedCount)
 }
 
-func GetAllUrlsList() {
-  cur, err := collection.Find(context.Background(), bson.D{{}})
+func FindOne(shortId string) (model.UrlModel, error) {
+  filter := bson.M{"shortId": shortId}
+  var result model.UrlModel
+  err := collection.FindOne(context.TODO(), filter).Decode(&result)
 
   if err != nil {
-    panic(err)
-  }
-
-  var urlList []primitive.M
-
-  for cur.Next(context.Background()) {
-    var model bson.M
-    err := cur.Decode(&model)
-    if err != nil {
-      panic(err)
+    if err == mongo.ErrNoDocuments {
+      return result, err
     }
-
-    urlList = append(urlList, primitive.M(model))
+    return result, err
   }
 
-  defer cur.Close(context.Background())
+  return result, nil
 }

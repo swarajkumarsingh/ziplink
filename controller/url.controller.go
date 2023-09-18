@@ -1,66 +1,79 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/swarajkumarsingh/ziplink/conf"
 	"github.com/swarajkumarsingh/ziplink/functions/general"
-	redisUtils "github.com/swarajkumarsingh/ziplink/infra/redis"
-	"gopkg.in/mgo.v2"
+	"github.com/swarajkumarsingh/ziplink/functions/logger"
+	"github.com/swarajkumarsingh/ziplink/infra/db"
+	redis "github.com/swarajkumarsingh/ziplink/infra/redis"
+	"github.com/swarajkumarsingh/ziplink/model"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type UrlController struct {
-	session *mgo.Session
-}
+func CreateUrl(c *gin.Context) {
+	var body Request
+	if err := c.ShouldBindJSON(&body); err != nil || body.LongUrl == "" || general.IsNotValidURL(body.LongUrl) {
+		SendErrorResponse(c, http.StatusBadRequest, "Url not found")
+		return
+	}
 
-type Response struct {
-	Url string
-	CustomShort string
-	Expiry time.Duration
-}
-
-func NewUrlController(s *mgo.Session) *UrlController {
-	return &UrlController{s}
-}
-
-func (uc UrlController) CreateUrl(c *gin.Context) {
-
-	// create redis client
-
-	// create mongodb client 
-
-	// get a counter from redis
-	counter, err := redisUtils.IncrementCounter()
+	shortId, err := GetShortId(body.LongUrl)
 	if err != nil {
-		panic(err)
+		SendErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	// convert the counter number to b64 encoder chr length 7
-	shortId := general.ConvertToBase64ID(counter)
-
-	var response Response = Response{
-		Url: longUrl,
-		CustomShort: shortId,
-		Expiry: conf.FreedomRedisTTL,
+	var content = model.UrlModel{
+		LongUrl: body.LongUrl,
+		ShortId: shortId,
+		Expiry:  conf.FreedomRedisTTL,
 	}
 
-	// Save in mongodb
+	msg, err := db.InsertUrl(c, content)
+	if err != nil {
+		SendErrorResponse(c, http.StatusInternalServerError, msg)
+	}
 
-	// Save in Redis cache with TTL(1 Day)
-	
+	err = CacheLongUrl(shortId, content.LongUrl)
+	if err != nil {
+		logger.WithRequest(c).Errorln(err.Error())
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "po=",
+		"error": false,
+		"data":  content,
 	})
 }
 
-func (uc UrlController) RedirectUrl(c *gin.Context) {
-	// create mongodb client 
+func RedirectUrl(c *gin.Context) {
+	shortId := c.Param("url")
+	if shortId == "" {
+		SendErrorResponse(c, http.StatusBadRequest, "Invalid shortUrl")
+		return
+	}
 
-	// find url from shortUrlId
+	val, err := redis.Get(shortId)
+	if err != nil || val == "" {
+		fmt.Println("url not found in cache")
 
-	// redirect to longURL
+		// fetch from DB
+		urlModel, err := db.FindOne(shortId)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				SendErrorResponse(c, http.StatusNotFound, "Specific Url not found")
+				return
+			}
+			SendErrorResponse(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
 
-	c.Redirect(http.StatusPermanentRedirect, "https://google.com/")
+		c.Redirect(http.StatusPermanentRedirect, urlModel.LongUrl)
+		return
+	}
+
+	fmt.Println("Redirecting from cache")
+	c.Redirect(http.StatusPermanentRedirect, val)
 }
