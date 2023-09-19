@@ -19,7 +19,7 @@ func SendErrorResponse(c *gin.Context, statusCode int, message string) {
 func GetShortId(longUrl string) (string, error) {
 	counter, err := redis.IncrementCounter()
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	shortId := general.ConvertToBase64ID(counter)

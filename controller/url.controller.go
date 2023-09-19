@@ -22,9 +22,8 @@ func CreateUrl(c *gin.Context) {
 	}
 
 	shortId, err := GetShortId(body.LongUrl)
-	fmt.Println(shortId)
 	if err != nil {
-		SendErrorResponse(c, http.StatusBadRequest, err.Error())
+		SendErrorResponse(c, http.StatusInternalServerError, "Internal server error")
 		return
 	}
 
