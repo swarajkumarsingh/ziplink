@@ -60,5 +60,5 @@ func main() {
   r.POST("/create-url", controller.CreateUrl)
 
   log.Printf("Server Started, version: %s", version)
-  r.Run("localhost:8080")
+  r.Run(":8080")
 }

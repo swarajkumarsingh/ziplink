@@ -2,7 +2,7 @@
 FROM golang:latest as builder
 
 # Add Maintainer Info
-LABEL maintainer="Swaraj kuamr singh Singh <shourya@finbox.in>"
+LABEL maintainer="Swaraj kuamr singh Singh <sswaraj169@gmail.com>"
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -23,8 +23,8 @@ RUN go build -o main .
 EXPOSE 8080
 
 # FOR PROD: Command to run the executable
-# CMD ["./main"]
+CMD ["./main"]
 
 # For DEV
-RUN nodemon --exec go run main.go
-CMD [ "nodemon", "--exec", "go", "run", "main.go"]
+# RUN nodemon --exec go run main.go
+# CMD [ "nodemon", "--exec", "go", "run", "main.go"]
