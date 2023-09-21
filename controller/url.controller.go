@@ -17,12 +17,13 @@ import (
 func CreateUrl(c *gin.Context) {
 	var body Request
 	if err := c.ShouldBindJSON(&body); err != nil || body.LongUrl == "" || !general.IsValidURL(body.LongUrl) {
-		SendErrorResponse(c, http.StatusBadRequest, "Url not found")
+		SendErrorResponse(c, http.StatusBadRequest, "Invalid url found")
 		return
 	}
 
-	shortId, err := GetShortId(body.LongUrl)
+	shortId, err := GetShortId()
 	if err != nil {
+		fmt.Println("1" +err.Error())
 		SendErrorResponse(c, http.StatusInternalServerError, "Internal server error")
 		return
 	}
@@ -33,8 +34,9 @@ func CreateUrl(c *gin.Context) {
 		Expiry:  conf.FreedomRedisTTL,
 	}
 
-	msg, err := db.InsertUrl(c, content)
+	msg, err := db.InsertUrl(content)
 	if err != nil {
+		fmt.Println("2" +err.Error())
 		SendErrorResponse(c, http.StatusInternalServerError, msg+err.Error())
 		return
 	}

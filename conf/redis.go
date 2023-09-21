@@ -17,7 +17,7 @@ func GetRedisAddr() string {
 }
 
 func getRedisAddrTemp() string {
-	return "localhost:6379"
+	return "127.0.0.1:6379"
 }
 
 var RedisConf = map[string]interface{}{

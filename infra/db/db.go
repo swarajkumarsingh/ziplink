@@ -1,24 +1,24 @@
 package db
 
 import (
-  "context"
-  "errors"
-  "fmt"
+	"context"
+	"errors"
+	"fmt"
+	"os"
 
-  "github.com/gin-gonic/gin"
-  "github.com/swarajkumarsingh/ziplink/conf"
-  "github.com/swarajkumarsingh/ziplink/functions/general"
-  "github.com/swarajkumarsingh/ziplink/model"
-  "go.mongodb.org/mongo-driver/bson/primitive"
-  "go.mongodb.org/mongo-driver/mongo"
-  "go.mongodb.org/mongo-driver/mongo/options"
-  "gopkg.in/mgo.v2/bson"
+	"github.com/swarajkumarsingh/ziplink/conf"
+	"github.com/swarajkumarsingh/ziplink/functions/general"
+	"github.com/swarajkumarsingh/ziplink/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var collection *mongo.Collection
 
 func Init() {
-  clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.qtu0upw.mongodb.net/?retryWrites=true&w=majority")
+  clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URL"))
 
   client, err := mongo.Connect(context.TODO(), clientOptions)
   if err != nil {
@@ -39,7 +39,7 @@ func Init() {
   fmt.Println("Connected to DB successfully")
 }
 
-func InsertUrl(c *gin.Context, model model.UrlModel) (string, error) {
+func InsertUrl(model model.UrlModel) (string, error) {
 
   if !general.IsValidURL(model.LongUrl) {
     return "Invalid url", errors.New("invalid url")

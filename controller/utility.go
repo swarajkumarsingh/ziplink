@@ -16,7 +16,7 @@ func SendErrorResponse(c *gin.Context, statusCode int, message string) {
 	})
 }
 
-func GetShortId(longUrl string) (string, error) {
+func GetShortId() (string, error) {
 	counter, err := redis.IncrementCounter()
 	if err != nil {
 		return "", err

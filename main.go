@@ -1,14 +1,14 @@
 package main
 
 import (
-  "log"
-  "net/http"
+	"log"
+	"net/http"
 
-  "github.com/gin-gonic/gin"
-  "github.com/joho/godotenv"
-  "github.com/swarajkumarsingh/ziplink/controller"
-  "github.com/swarajkumarsingh/ziplink/infra/db"
-  redis "github.com/swarajkumarsingh/ziplink/infra/redis"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"github.com/swarajkumarsingh/ziplink/controller"
+	"github.com/swarajkumarsingh/ziplink/infra/db"
+	redis "github.com/swarajkumarsingh/ziplink/infra/redis"
 )
 
 var version string = "1.0"
@@ -31,7 +31,13 @@ func EnableCORS() gin.HandlerFunc {
 }
 
 func main() {
+  // gin.SetMode(gin.ReleaseMode)
+  
   r := gin.Default()
+
+
+  r.Use(gin.Logger())
+  r.Use(gin.Recovery())
 
   r.Use(EnableCORS())
 
