@@ -3,7 +3,7 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 <div align="center">
-  <img src=".github/banner.png" alt="App Logo" />
+  <img src="./screenshot/banner.png" alt="App Logo" />
 </div>
 
 
