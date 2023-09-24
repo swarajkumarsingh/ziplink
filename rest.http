@@ -2,7 +2,7 @@
 GET http://localhost:8080
 
 ### Redirect Url
-GET http://localhost:8080/AAAAAAX
+GET http://localhost:8080/AAAAAAV
 
 ### Create Short Url
 POST http://localhost:8080/create-url

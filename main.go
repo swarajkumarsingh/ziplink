@@ -13,7 +13,7 @@ import (
 
 var version string = "1.0"
 
-func EnableCORS() gin.HandlerFunc {
+func enableCORS() gin.HandlerFunc {
   return func(c *gin.Context) {
     c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
     c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
@@ -31,7 +31,7 @@ func EnableCORS() gin.HandlerFunc {
 }
 
 func main() {
-  // gin.SetMode(gin.ReleaseMode)
+  gin.SetMode(gin.ReleaseMode)
   
   r := gin.Default()
 
@@ -39,7 +39,7 @@ func main() {
   r.Use(gin.Logger())
   r.Use(gin.Recovery())
 
-  r.Use(EnableCORS())
+  r.Use(enableCORS())
 
   // Load environment variables from a .env file
   err := godotenv.Load()

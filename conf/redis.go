@@ -17,12 +17,12 @@ func GetRedisAddr() string {
 }
 
 func getRedisAddrTemp() string {
-	return "127.0.0.1:6379"
+	return "host.docker.internal:6379"
 }
 
 var RedisConf = map[string]interface{}{
-	"Addr":     getRedisAddrTemp(),
-	"SSL":      ENV == ENV_PROD,
-	"Username": os.Getenv("REDIS_USER"),
-	"Password": os.Getenv("REDIS_PASSWORD"),
+	"Addr": getRedisAddrTemp(),
+	"SSL":  ENV == ENV_PROD,
+	// "Username": os.Getenv("REDIS_USER"),
+	// "Password": os.Getenv("REDIS_PASSWORD"),
 }

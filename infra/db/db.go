@@ -1,27 +1,27 @@
 package db
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"os"
+  "context"
+  "errors"
+  "fmt"
 
-	"github.com/swarajkumarsingh/ziplink/conf"
-	"github.com/swarajkumarsingh/ziplink/functions/general"
-	"github.com/swarajkumarsingh/ziplink/model"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"gopkg.in/mgo.v2/bson"
+  "github.com/swarajkumarsingh/ziplink/conf"
+  "github.com/swarajkumarsingh/ziplink/functions/general"
+  "github.com/swarajkumarsingh/ziplink/model"
+  "go.mongodb.org/mongo-driver/bson/primitive"
+  "go.mongodb.org/mongo-driver/mongo"
+  "go.mongodb.org/mongo-driver/mongo/options"
+  "gopkg.in/mgo.v2/bson"
 )
 
 var collection *mongo.Collection
 
 func Init() {
-  clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URL"))
+  clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.qtu0upw.mongodb.net/?retryWrites=true&w=majority")
 
   client, err := mongo.Connect(context.TODO(), clientOptions)
   if err != nil {
+    fmt.Printf("Error while connecting to DB, Error: %s", err.Error())
     panic(err)
   }
 
