@@ -7,7 +7,7 @@
 </div>
 
 
-A simple URL shortener service implemented in Golang with Redis and MongoDB for storage, and Docker for containerization.
+A Scalable URL shortener service implemented in Golang with Redis and MongoDB for storage, and Docker for containerization.
 
 ## Table of Contents
 
@@ -43,13 +43,13 @@ Before you begin, ensure you have met the following requirements:
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/url-shortener-service.git
+   git clone https://github.com/swarajkumarsingh/ziplink.git
 
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd url-shortener-service
+   cd ziplink
    ```
 3. Install the required Go packages:
    ```bash
