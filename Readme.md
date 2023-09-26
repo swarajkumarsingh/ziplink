@@ -3,7 +3,7 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 <div align="center">
-  <img src="./screenshot/banner.png" alt="App Logo" />
+  <img src="https://res.cloudinary.com/swaraj-cloud/image/upload/v1695746882/wahavuo3msy7yvwgteaa.png" alt="Banner" />
 </div>
 
 
