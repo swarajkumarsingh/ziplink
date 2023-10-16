@@ -34,14 +34,9 @@ func main() {
   gin.SetMode(gin.ReleaseMode)
   
   r := gin.Default()
-
-
-  r.Use(gin.Logger())
+  r.Use(enableCORS())
   r.Use(gin.Recovery())
 
-  r.Use(enableCORS())
-
-  // Load environment variables from a .env file
   err := godotenv.Load()
   if err != nil {
     log.Fatal("Error loading .env file")
