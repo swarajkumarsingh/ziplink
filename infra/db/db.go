@@ -1,17 +1,17 @@
 package db
 
 import (
+	"fmt"
 	"context"
 	"errors"
-	"fmt"
 
+	"gopkg.in/mgo.v2/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"github.com/swarajkumarsingh/ziplink/conf"
-	"github.com/swarajkumarsingh/ziplink/functions/general"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"github.com/swarajkumarsingh/ziplink/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"gopkg.in/mgo.v2/bson"
+	"github.com/swarajkumarsingh/ziplink/functions/general"
 )
 
 var collection *mongo.Collection
@@ -23,8 +23,7 @@ func Init() {
     return
   }
 
-  clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.qtu0upw.mongodb.net/?retryWrites=true&w=majority")
-
+  clientOptions := options.Client().ApplyURI(conf.MONGO_CONNECTION_URL)
   client, err := mongo.Connect(context.TODO(), clientOptions)
   if err != nil {
     isConnectDB = false

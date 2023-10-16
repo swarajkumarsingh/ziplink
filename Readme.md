@@ -56,6 +56,10 @@ Before you begin, ensure you have met the following requirements:
    go mod tidy
    ```
 
+### Benchmarks
+* **POST requests (Create Short-URL):** Average 856.728106ms (shared cloud cluster)
+* **GET requests (REDIRECT URL):** Average 5.33ms (Redis, MongoDB)
+
 ### Configuration
 1. Mongodb client(local, atlas)
 2. Redis client(local, cloud)
