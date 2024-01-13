@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
-	"net/http"
+  "log"
+  "net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/swarajkumarsingh/ziplink/controller"
+  "github.com/gin-gonic/gin"
+  "github.com/swarajkumarsingh/ziplink/controller"
 )
 
 var version string = "1.0"
@@ -28,10 +28,8 @@ func enableCORS() gin.HandlerFunc {
 }
 
 func main() {
-  
-
   gin.SetMode(gin.ReleaseMode)
-  
+
   r := gin.Default()
   r.Use(enableCORS())
   r.Use(gin.Recovery())

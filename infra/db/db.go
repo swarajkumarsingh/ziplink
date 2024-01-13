@@ -5,6 +5,7 @@ import (
   "errors"
   "fmt"
   "log"
+  "os"
 
   "github.com/joho/godotenv"
   "github.com/swarajkumarsingh/ziplink/conf"
@@ -30,7 +31,7 @@ func init() {
     log.Fatal("Error loading .env file")
   }
 
-  clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.qtu0upw.mongodb.net/?retryWrites=true&w=majority")
+  clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URL"))
   client, err := mongo.Connect(context.TODO(), clientOptions)
   if err != nil {
     isConnectDB = false
@@ -59,8 +60,6 @@ func InsertUrl(model model.UrlModel) (string, error) {
   if !general.IsValidURL(model.LongUrl) {
     return "Invalid url", errors.New("invalid url")
   }
-
-  fmt.Println(model)
 
   inserted, err := collection.InsertOne(context.TODO(), model)
 

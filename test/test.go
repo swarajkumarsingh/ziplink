@@ -81,7 +81,7 @@ func POST() {
 	concurrentRequests := 100
 
 	// Define the total number of POST requests to send.
-	totalRequests := 10000
+	totalRequests := 1000
 
 	var wg sync.WaitGroup
 	responseTimes := make(chan time.Duration, totalRequests)
@@ -142,7 +142,7 @@ func sendPostRequest(targetURL string, wg *sync.WaitGroup, responseTimes chan ti
 }
 
 func main() {
-	GET()
-	// POST()
+	// GET()
+	POST()
 }
 

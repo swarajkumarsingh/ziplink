@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"fmt"
 	"os"
 	"time"
 )
@@ -13,7 +12,7 @@ Redis Configurations
 const FreedomRedisTTL = time.Hour * 24
 
 func GetRedisAddr() string {
-	return fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
+	return os.Getenv("REDIS_HOST")
 }
 
 func getRedisAddrTemp() string {
@@ -23,6 +22,6 @@ func getRedisAddrTemp() string {
 var RedisConf = map[string]interface{}{
 	"Addr": getRedisAddrTemp(),
 	"SSL":  ENV == ENV_PROD,
-	// "Username": os.Getenv("REDIS_USER"),
-	// "Password": os.Getenv("REDIS_PASSWORD"),
+	"Username": os.Getenv("REDIS_USER"),
+	"Password": os.Getenv("REDIS_PASSWORD"),
 }

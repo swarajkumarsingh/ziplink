@@ -16,7 +16,6 @@ var (
 )
 
 func init() {
-
 	enableSSL, _ := conf.RedisConf["SSL"].(bool)
 	endpoint, _ := conf.RedisConf["Addr"].(string)
 	userName, _ := conf.RedisConf["Username"].(string)
