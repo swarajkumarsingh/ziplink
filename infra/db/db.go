@@ -1,36 +1,43 @@
 package db
 
 import (
-	"fmt"
-	"context"
-	"errors"
+  "context"
+  "errors"
+  "fmt"
+  "log"
 
-	"gopkg.in/mgo.v2/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"github.com/swarajkumarsingh/ziplink/conf"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"github.com/swarajkumarsingh/ziplink/model"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"github.com/swarajkumarsingh/ziplink/functions/general"
+  "github.com/joho/godotenv"
+  "github.com/swarajkumarsingh/ziplink/conf"
+  "github.com/swarajkumarsingh/ziplink/functions/general"
+  "github.com/swarajkumarsingh/ziplink/model"
+  "go.mongodb.org/mongo-driver/bson/primitive"
+  "go.mongodb.org/mongo-driver/mongo"
+  "go.mongodb.org/mongo-driver/mongo/options"
+  "gopkg.in/mgo.v2/bson"
 )
 
 var collection *mongo.Collection
 
 var isConnectDB = false
-func Init() {
 
+func init() {
   if isConnectDB {
     return
   }
 
-  clientOptions := options.Client().ApplyURI(conf.MONGO_CONNECTION_URL)
+  err := godotenv.Load()
+  if err != nil {
+    log.Fatal("Error loading .env file")
+  }
+
+  clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin@cluster0.qtu0upw.mongodb.net/?retryWrites=true&w=majority")
   client, err := mongo.Connect(context.TODO(), clientOptions)
   if err != nil {
     isConnectDB = false
     fmt.Printf("Error while connecting to DB, Error: %s", err.Error())
     panic(err)
   }
-  
+
   isConnectDB = true
 
   collection = client.Database(conf.DbName).Collection(conf.ColName)

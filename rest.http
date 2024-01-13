@@ -7,6 +7,7 @@ GET http://localhost:8080/AAAAAAB
 ### Create Short Url
 POST http://localhost:8080/create-url
 content-type: application/json
+
 {
-  "url": "https://instagram.com/"
+  "url": "https://facebook.com/"
 }

@@ -15,7 +15,7 @@ var (
 	rdb *redis.Client
 )
 
-func Init() {
+func init() {
 
 	enableSSL, _ := conf.RedisConf["SSL"].(bool)
 	endpoint, _ := conf.RedisConf["Addr"].(string)

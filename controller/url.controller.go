@@ -61,7 +61,7 @@ func RedirectUrl(c *gin.Context) {
 
 	val, err := redis.Get(shortId)
 	if err != nil || val == "" || !general.IsValidURL(val) {
-		fmt.Println("url not found in cache")
+		logger.Log.Errorln("url not found in cache")
 
 		// fetch from DB
 		urlModel, err := db.FindOne(shortId)

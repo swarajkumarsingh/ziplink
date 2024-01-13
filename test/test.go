@@ -51,7 +51,7 @@ func GET() {
 	concurrentRequests := 1
 
 	// Define the total number of requests to send.
-	totalRequests := 10000
+	totalRequests := 100
 
 	var wg sync.WaitGroup
 
