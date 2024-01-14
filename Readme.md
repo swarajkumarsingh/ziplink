@@ -51,6 +51,7 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    cd ziplink
    ```
+
 3. Install the required Go packages:
    ```bash
    go mod tidy
@@ -65,7 +66,8 @@ Before you begin, ensure you have met the following requirements:
 2. Redis client(local, cloud)
 
 ### Usage
-- After installing docker, just run dev.bat(windows), linux and mac run make run(Note: Mongodb, and redis client should be running)
+- After installing docker, just run dev.bat(windows), linux and mac run make run(Note: Mongodb, and redis client should be running,)
+**NOTE:** Add configs as shown in run.example.sh 
 ```bash
 ./run.sh
 ```
