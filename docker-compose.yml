@@ -1,32 +1,45 @@
 version: '3.9'
 
 services:
-# MongoDB
+
   mongo_db:
     container_name: db_container
     image: mongo:latest
-    restart: always
+    restart: on-failure
     volumes:
       - mongo_db:/data/db
 
-# Redis
   redis:
-    build: redis
-    container_name: redis_container
+    build: ./redis/.
+    container_name: redis_container_2
     ports:
       - 6379:6379
+    restart: on-failure
     volumes:
       - .cache:/data
     
-# Golang API service
   golang:
-    container_name: golang_container
-    build: .
+    container_name: golang_container_2
+    build:
+      dockerfile: Dockerfile.local
+    environment:
+      - PORT=${PORT}
+      - STAGE=${STAGE}
+      - MONGO_URL=${MONGO_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_USER=${REDIS_USER}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports:
       - 8080:8080
+    restart: on-failure
     depends_on:
-      - mongo_db
       - redis
+      - mongo_db
+    # For Dockerfile.Local only
+    volumes:
+      - ./:/app
 
 volumes:
+  redis: {}
   mongo_db: {}

@@ -1,24 +1,32 @@
+SCRIPT_FOLDER_NAME = commands
+
 run:
-	docker build -t ziplink . && docker run -p 8080:8080 ziplink
-
-compose_build:
 	docker compose build
-
-compose:
-	make compose_build && make only_compose
-
-only_compose:
 	docker compose up
 
 build:
-	docker build -t ziplink
+	docker build -t ziplink . && docker run -p 8080:8080 ziplink
 
 start:
 	docker run -p 8080:8080 ziplink
 
+compose:
+	docker compose build && docker compose up
+
+down:
+	docker compose down
+
 dev:
 	nodemon --exec go run main.go
 
-deploy: echo "TODO"
+install:
+	go mod tidy
 
-test: echo "TODO"
+deploy: 
+	echo "TODO"
+
+test: 
+	echo "TODO"
+
+.PHONY: build run logs dockerstop
+.SILENT: build run logs dockerstop

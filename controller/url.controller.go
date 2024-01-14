@@ -23,7 +23,7 @@ func CreateUrl(c *gin.Context) {
 
 	shortId, err := GetShortId()
 	if err != nil {
-		fmt.Println("1" +err.Error())
+		fmt.Println("1" + err.Error())
 		SendErrorResponse(c, http.StatusInternalServerError, "Internal server error")
 		return
 	}
@@ -36,7 +36,7 @@ func CreateUrl(c *gin.Context) {
 
 	msg, err := db.InsertUrl(content)
 	if err != nil {
-		fmt.Println("2" +err.Error())
+		fmt.Println("2" + err.Error())
 		SendErrorResponse(c, http.StatusInternalServerError, msg+err.Error())
 		return
 	}
@@ -83,6 +83,6 @@ func RedirectUrl(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("Redirecting from cache")
+	logger.WithRequest(c).Println("Redirecting from cache")
 	c.Redirect(http.StatusPermanentRedirect, val)
 }

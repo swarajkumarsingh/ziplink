@@ -142,7 +142,7 @@ func sendPostRequest(targetURL string, wg *sync.WaitGroup, responseTimes chan ti
 }
 
 func main() {
-	// GET()
-	POST()
+	GET()
+	// POST()
 }
 
