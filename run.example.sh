@@ -1,2 +1,0 @@
-docker compose down
-make run STAGE=dev PORT=8080 MONGO_URL= REDIS_HOST= REDIS_PORT= REDIS_USER= REDIS_PASSWORD=
